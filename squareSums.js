@@ -1,38 +1,49 @@
-const findNext = (len, last, used, sqrs, n) => {
-  if (len === n) return [last];
-
-  for (let i = sqrs.length - 1; i >= 0 && sqrs[i] > last; i--) {
-    const next = sqrs[i] - last;
-
-    if (next > n || used[next]) continue;
-
-    used[next] = true;
-
-    const result = findNext(len + 1, next, used, sqrs, n);
-
-    if (result) return [...result, last];
-
-    used[next] = false;
-  }
-
-  return false;
-};
-
-export default function squareSumsRow(n) {
+function Graph(n) {
   const sqrs = [];
-  const used = [];
+  const graph = [];
 
   for (let i = 2; i * i <= n * 2 - 1; i++) sqrs.push(i * i);
 
-  for (let i = n; i > 0; i--) {
-    used[i] = true;
+  for (let i = 1; i <= n; i++) {
+    const peers = [];
 
-    const result = findNext(1, i, used, sqrs, n);
+    for (const sqr of sqrs) {
+      const peer = sqr - i;
 
-    if (result) return result;
+      if (peer > 0 && peer <= n && i !== peer) peers.push(peer);
+    }
 
-    used[i] = false;
+    graph[i] = peers;
   }
 
-  return false;
-};
+  return graph;
+}
+
+export default function squareSumsRow(n) {
+  if (n < 25 && ![1, 15, 16, 17, 23].includes(n)) return false; // no solution
+
+  const vertices = [Array.from({ length: n }, (_, i) => i + 1)];
+  const graph = Graph(n);
+  const path = [];
+
+  function dfs(vertices) {
+    if (path.length === n) return path;
+
+    vertices.sort((a, b) => graph[a].length - graph[b].length);
+
+    for (const vertex of vertices) {
+      path.push(vertex);
+
+      graph[vertex].forEach(adj => graph[adj] = graph[adj].filter(ve => ve !== vertex));
+
+      if (dfs(graph[vertex])) return path;
+
+      path.pop();
+      graph[vertex].forEach(adj => graph[adj].push(vertex));
+    }
+
+    return false;
+  }
+
+  return dfs(vertices);
+}
