@@ -22,7 +22,7 @@ function Graph(n) {
 export default function squareSumsRow(n) {
   if (n < 25 && ![1, 15, 16, 17, 23].includes(n)) return false; // no solution
 
-  const vertices = [Array.from({ length: n }, (_, i) => i + 1)];
+  const vertices = Array.from({ length: n }, (_, i) => i + 1);
   const graph = Graph(n);
   const path = [];
 
