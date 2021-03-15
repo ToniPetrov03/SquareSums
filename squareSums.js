@@ -1,6 +1,10 @@
-function Graph(n) {
+function squareSumsRow(n) {
+  if (n < 25 && ![1, 15, 16, 17, 23].includes(n)) return false;
+
+  const vertices = Array.from({ length: n }, (_, i) => i + 1);
   const sqrs = [];
   const graph = [];
+  const path = [];
 
   for (let i = 2; i * i <= n * 2 - 1; i++) sqrs.push(i * i);
 
@@ -15,16 +19,6 @@ function Graph(n) {
 
     graph[i] = peers;
   }
-
-  return graph;
-}
-
-export default function squareSumsRow(n) {
-  if (n < 25 && ![1, 15, 16, 17, 23].includes(n)) return false; // no solution
-
-  const vertices = Array.from({ length: n }, (_, i) => i + 1);
-  const graph = Graph(n);
-  const path = [];
 
   function dfs(vertices) {
     if (path.length === n) return path;
