@@ -5,12 +5,12 @@ function Graph(n) {
   for (let i = 2; i * i <= n * 2 - 1; i++) sqrs.push(i * i);
 
   for (let i = 1; i <= n; i++) {
-    const peers = [];
+    const peers = new Set();
 
     for (const sqr of sqrs) {
       const peer = sqr - i;
 
-      if (peer > 0 && peer <= n && i !== peer) peers.push(peer);
+      if (peer > 0 && peer <= n && peer !== i) peers.add(peer);
     }
 
     graph[i] = peers;
@@ -29,17 +29,18 @@ export default function squareSumsRow(n) {
   function dfs(vertices) {
     if (path.length === n) return path;
 
-    vertices.sort((a, b) => graph[a].length - graph[b].length);
+    vertices.sort((a, b) => graph[a].size - graph[b].size);
 
     for (const vertex of vertices) {
       path.push(vertex);
 
-      graph[vertex].forEach(adj => graph[adj] = graph[adj].filter(ve => ve !== vertex));
+      graph[vertex].forEach(adj => graph[adj].delete(vertex));
 
-      if (dfs(graph[vertex])) return path;
+      if (dfs([...graph[vertex]])) return path;
 
       path.pop();
-      graph[vertex].forEach(adj => graph[adj].push(vertex));
+
+      graph[vertex].forEach(adj => graph[adj].add(vertex));
     }
 
     return false;
