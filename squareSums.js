@@ -1,21 +1,25 @@
 function squareSumsRow(n) {
   if (n < 25 && ![1, 15, 16, 17, 23].includes(n)) return false;
 
-  const vertices = Array.from({ length: n }, (_, i) => i + 1);
+  const vertices = [];
   const sqrs = [];
   const graph = [];
   const path = [];
 
-  for (let i = 2; i * i <= n * 2 - 1; i++) sqrs.push(i * i);
+  const s = (n * 2) ** 0.5 | 0;
+
+  for (let i = 1; i <= n; i++) vertices.push(i);
+  for (let i = 2; i <= s; i++) sqrs.push(i * i);
 
   for (let i = 1; i <= n; i++) {
     const peers = new Set();
 
-    for (const sqr of sqrs) {
-      const peer = sqr - i;
+    const start = i ** 0.5 - 1 | 0;
+    const end = Math.min((n + i) ** 0.5 - 1 | 0, s);
 
-      if (peer > 0 && peer <= n && peer !== i) peers.add(peer);
-    }
+    for (let j = start; j < end; j++) peers.add(sqrs[j] - i);
+
+    peers.delete(i);
 
     graph[i] = peers;
   }
