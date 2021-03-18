@@ -1,28 +1,36 @@
-function squareSumsRow(n) {
-  if (n < 25 && ![1, 15, 16, 17, 23].includes(n)) return false;
+function Graph(n) {
+  const { sqrt, min } = Math;
 
-  const vertices = [];
   const sqrs = [];
   const graph = [];
-  const path = [];
 
-  const s = (n * 2) ** 0.5 | 0;
+  const numSqrs = ~~(sqrt(n + n));
 
-  for (let i = 1; i <= n; i++) vertices.push(i);
-  for (let i = 2; i <= s; i++) sqrs.push(i * i);
+  for (let i = 2; i <= numSqrs; i++) sqrs.push(i * i);
 
   for (let i = 1; i <= n; i++) {
     const peers = new Set();
 
-    const start = i ** 0.5 - 1 | 0;
-    const end = Math.min((n + i) ** 0.5 - 1 | 0, s);
+    const start = ~~(sqrt(i)) - 1;
+    const end = min(~~(sqrt(n + i)) - 1, numSqrs);
 
-    for (let j = start; j < end; j++) peers.add(sqrs[j] - i);
+    for (let j = start; j < end; j++) {
+      const peer = sqrs[j] - i;
 
-    peers.delete(i);
+      if (peer !== i) peers.add(peer);
+    }
 
     graph[i] = peers;
   }
+
+  return graph;
+}
+
+function squareSumsRow(n) {
+  if (n < 25 && ![1, 15, 16, 17, 23].includes(n)) return false;
+
+  const graph = Graph(n);
+  const path = [];
 
   function dfs(vertices) {
     if (path.length === n) return path;
@@ -44,5 +52,5 @@ function squareSumsRow(n) {
     return false;
   }
 
-  return dfs(vertices);
+  return dfs(Array.from({ length: n }, (_, i) => i + 1));
 }
