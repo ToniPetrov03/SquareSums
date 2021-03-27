@@ -9,7 +9,7 @@ function Graph(n) {
   for (let i = 2; i <= numSqrs; i++) sqrs.push(i * i);
 
   for (let i = 1; i <= n; i++) {
-    const peers = new Set();
+    const peers = [];
 
     const start = ~~(sqrt(i)) - 1;
     const end = min(~~(sqrt(n + i)) - 1, numSqrs);
@@ -17,7 +17,7 @@ function Graph(n) {
     for (let j = start; j < end; j++) {
       const peer = sqrs[j] - i;
 
-      if (peer !== i) peers.add(peer);
+      if (peer !== i) peers.push(peer);
     }
 
     graph[i] = peers;
@@ -35,18 +35,18 @@ function squareSumsRow(n) {
   function dfs(vertices) {
     if (path.length === n) return path;
 
-    vertices.sort((a, b) => graph[a].size - graph[b].size);
+    vertices.sort((a, b) => graph[a].length - graph[b].length);
 
     for (const vertex of vertices) {
       path.push(vertex);
 
-      graph[vertex].forEach(adj => graph[adj].delete(vertex));
+      graph[vertex].forEach(adj => graph[adj].splice(graph[adj].indexOf(vertex), 1));
 
-      if (dfs([...graph[vertex]])) return path;
+      if (dfs(graph[vertex])) return path;
 
       path.pop();
 
-      graph[vertex].forEach(adj => graph[adj].add(vertex));
+      graph[vertex].forEach(adj => graph[adj].push(vertex));
     }
 
     return false;
