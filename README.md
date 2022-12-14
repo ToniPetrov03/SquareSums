@@ -37,14 +37,5 @@ Sum of each 2 consecutive numbers is a perfect square:
 25 = 5*5
 ```
 
-If there is no solution, return ```False```.
+If there is no solution, return ```false```.
 For example if ```N=5```, then numbers ```1,2,3,4,5``` cannot be put into square sums row: ```1+3=4```, ```4+5=9```, but ```2``` has no pairs and cannot link ```[1,3]``` and ```[4,5]```.
-
-## Tests constraints
-
-* ```1 <= N <= 1300```
-* All possible values of ```N``` are tested
-* Brute force solutions can only go up to ```N=50```.
-* Code size is restricted to 20K max, and external modules are disabled: inlining all results precalculated is not an option.
-
-## Have fun!
