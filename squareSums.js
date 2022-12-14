@@ -55,4 +55,4 @@ function squareSumsRow(n) {
   return dfs(Array.from({ length: n }, (_, i) => i + 1));
 }
 
-squareSumsRow(10000)
+// Recursive solution
